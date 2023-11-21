@@ -23,7 +23,7 @@ import numpy as np
 import skimage as sk
 import matplotlib.pyplot as plt
 import tensorflow.keras.backend as K
-from offline_training import *
+from main_branch_stuff.offline_training import *
 from math import isnan
 
 SIZE = (224, 224, 3)
