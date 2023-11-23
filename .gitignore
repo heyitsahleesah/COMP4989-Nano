@@ -1,1 +1,7 @@
 .DS_Store
+*.h5
+DFN_dataset
+Data_split
+Felix_Stuff
+*.txt
+test.jpeg
