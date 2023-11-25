@@ -1,0 +1,32 @@
+# Dataset from resource:
+[1] Can Humans Fly? Action Understanding with Multiple Classes of Actors.
+    C. Xu, S.-H. Hsieh, C. Xiong and J. J. Corso
+    IEEE Conference on Computer Vision and Pattern Recognition, 2015
+
+
+# Application of Model
+The core of this application is a model that is trained on a pre-established database of dogs. Each entry (dog) in the database should be comprised of 5 high-quality images. 
+
+In the event that a missing dog is found, it can be submitted to the model to determine if the dog is missing (so long as it is part of the registry).
+
+A more wide-spread application of the tool would entail the ability to continuously train the model on newly missing dogs. It would enable an owner to submit a video/photographs of their dog that is currently missing, (re)train the model on these new images, and then be able to compare newly located dogs agains the submitted data to determine if the dog has been found.
+
+# Edge Computing Application
+There are two potential edge computing applications for this model
+1. The model could run on a phone in the form of an app. Photos/Videos of a found dog could be submitted to/via the app of a dog, and the model would determine whether it is a missing/known dog based on the existing entries in the registry.
+2. An edge device, such as the Jetson Nano, could similarly run the app so long as a camera peripheral of some kind, of sufficient quality, was attached.
+
+# Edge Computing Pipeline
+This dataset included videos across many different actors (humans, dogs, etc.)
+and activities (running, walking, eating, etc.).
+
+The dataset was pruned with data_prune.py to remove all non-dog related videos.
+
+The dataset was converted from videos to snapshots using auto_snapshot.py, which
+took a single snapshot per second of video play-time.
+
+At this stage, there is an organized folder-subfolder structure of dog-only images. However, some images do not have a dog as a focal-point, or contain the dog's face in some/all.
+
+To address this, YOLOv8 was used to determine the size of the dog's box in a given image and compare it to the total size of an image. a threshold was set to 40%, and image-sets that did not meet this threshold were removed.
+
+To ensure that at least one photo in a dog's image-set includes 

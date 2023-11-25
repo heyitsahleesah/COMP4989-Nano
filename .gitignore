@@ -3,3 +3,4 @@ felix_trash/output/*
 photos
 DFN_dataset/
 .DS_Store
+.venv/
