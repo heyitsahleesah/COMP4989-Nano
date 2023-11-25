@@ -1,3 +1,5 @@
 *.h5
 felix_trash/output/*
 photos
+DFN_dataset/
+.DS_Store
