@@ -334,7 +334,7 @@ def online_adaptive_hard_image_generator(
             keep_classes = np.logical_or(keep_classes, np.equal(labels, subclasses[i]))
         subfilenames = filenames[keep_classes]
         sublabels = labels[keep_classes]
-        predict = model.predict_generator(predict_generator(subfilenames, 32),
+        predict = model.predict(predict_generator(subfilenames, 32),
                                           steps=int(np.ceil(len(subfilenames) / 32)))
 
         f_triplet_hard, y_triplet_hard, predict_hard = define_adaptive_hard_triplets_batch(subfilenames, sublabels,

@@ -16,9 +16,9 @@ from online_training import *
 #----------------------------------------------------------------------------
 # Config.
 
-PATH        = './DFN_dataset/'                 # Path to the directory of the saved dataset
-PATH_SAVE   = '../output/history/'                  # Path to the directory where the history will be stored
-PATH_MODEL  = '../output/model/'                    # Path to the directory where the model will be stored
+PATH        = '../DFN_dataset/'  # Path to the directory of the saved dataset
+PATH_SAVE   = '../../output/history/'  # Path to the directory where the history will be stored
+PATH_MODEL  = '../../output/model/'  # Path to the directory where the model will be stored
 SIZE        = (224,224,3)                           # Size of the input images
 TEST_SPLIT  = 0.1                                   # Train/test ratio
 
@@ -199,7 +199,7 @@ if HIGH_LEVEL:
 
         print(f"Current hard triplet ratio: {str(hard_triplet_ratio)}")
 
-        histories += [model.fit_generator(
+        histories += [model.fit(
             online_adaptive_hard_image_generator(filenames_train, labels_train, model, crt_loss, batch_size,
                                                  nbof_subclasses=nbof_subclasses),
             steps_per_epoch=STEPS_PER_EPOCH,
