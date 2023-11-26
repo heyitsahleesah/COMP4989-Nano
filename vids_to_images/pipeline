@@ -27,6 +27,9 @@ took a single snapshot per second of video play-time.
 
 At this stage, there is an organized folder-subfolder structure of dog-only images. However, some images do not have a dog as a focal-point, or contain the dog's face in some/all.
 
-To address this, YOLOv8 was used to determine the size of the dog's box in a given image and compare it to the total size of an image. a threshold was set to 40%, and image-sets that did not meet this threshold were removed.
+To address this, YOLOv8 was used to determine the size of the dog's box in a given image and compare it to the total size of an image. A threshold was set to 20%, and image that did not meet this threshold were removed. The dog directories were then checked to determine how many images remained. A threshold of 10 images were required to ensure sufficient data-per-dog. Directories with fewer than 10 images were removed.
 
-To ensure that at least one photo in a dog's image-set includes 
+The YOLOv8 model was then used again to crop the images so that the dog's bounding box was the only remaining section of the photo.
+
+## Single Video Processing
+For this pipeline to be useful, the Classes created for processing the data were revised to facilitate the processing of a single video. In doing so, the groundwork was created for the model to accept user-generated data (e.g. a video of the found dog) that could be fed into the model to determine if the found dog is missing/registered in the database. An example of this can be found in samplePipeline.py.
