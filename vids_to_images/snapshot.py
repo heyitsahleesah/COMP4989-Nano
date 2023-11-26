@@ -1,11 +1,11 @@
 import os
 import cv2
 import shutil
-
+from pathlib import Path
 
 class SnapShot:
     @staticmethod
-    def extract_frames(video_location, output_directory, interval):
+    def extract_frames(video_location, output_directory, interval, dataset=True):
         """Takes in a video and saves one screen shot per interval.
 
         Args:
@@ -18,10 +18,14 @@ class SnapShot:
         fps = int(cap.get(cv2.CAP_PROP_FPS))  # save the FPS of the video
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))  # save total frame count of video
 
-        # parse video name from path, create subdir for video in output dir
         video_name = os.path.splitext(os.path.basename(video_location))[0]
-        video_output_directory = os.path.join(output_directory, video_name)
-        os.makedirs(video_output_directory, exist_ok=True)
+
+        # parse video name from path, create subdir for video in output dir
+        if dataset:
+            video_output_directory = os.path.join(output_directory, video_name)
+            os.makedirs(video_output_directory, exist_ok=True)
+        else:
+            video_output_directory = output_directory
 
         # calculate how many frames in current interval
         interval_frames = int(fps * interval)

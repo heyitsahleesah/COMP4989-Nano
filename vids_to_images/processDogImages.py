@@ -20,15 +20,16 @@ class ProcessDogImages:
         subdirectory_containing_images002/
         etc.
     """
-    def __init__(self, confidence_threshold=0.5) -> None:
+    def __init__(self, confidence_threshold=0.5, dog_threshold=20, image_count_min=10) -> None:
         self.model = YOLO("yolov8m.pt")  # Load YOLOv8 model
         self.confidence_threshold = confidence_threshold
         self.dog_codes = DogStatus
-        self.dog_threshold = 20  # value is percentage e.g. 20 = 20%
-        self.image_count_minimum = 10
+        self.dog_threshold = dog_threshold  # value is percentage e.g. 20 = 20%
+        self.image_count_minimum = image_count_min
 
     def determine_dog_proportion_is_valid(self, image_path):
-        """Check how big the dog is in relation to the photo.
+        """Check how big the dog is in relation to the photo and determines validity
+        based on confidence_threshold and dog_threshold settings.
 
         Args:
             image_path (string): the file path of the image
@@ -69,7 +70,7 @@ class ProcessDogImages:
         return self.dog_codes.VALID if percentage_dog_area > self.dog_threshold else self.dog_codes.INVALID
     
 
-    def test_images_in_folder(self, target_directory):
+    def test_images_in_folder(self, target_directory, invalid_dir=None):
         """Checks the proportion of a dog vs. photo size for each image in a directory. If an image is invalid,
         it is moved to subfolder of the same name as the target_directory in the invalid_data folder.
 
@@ -78,7 +79,8 @@ class ProcessDogImages:
 
         """
         target_dir = Path(target_directory)
-        invalid_dir = target_dir.parent / 'invalid_data'
+        if invalid_dir == None:
+            invalid_dir = target_dir.parent / 'invalid_data'
 
         for file in target_dir.iterdir():
             if file.suffix.lower() in ['.jpg', '.jpeg']:
@@ -92,7 +94,13 @@ class ProcessDogImages:
                 shutil.move(file, destination_path)
     
 
-    def sort_data(self, data_directory):
+    def sort_dataset(self, data_directory):
+        """Traverses data_directory's subfolders and determines if the data (images)
+        within are valid (contain single dog and large enough) or not (dog not detected, too small, multiples)
+
+        Args:
+            data_directory (string): directory containing subdirectories of dog images to be processed
+        """
         data_dir = Path(data_directory)
         invalid_data_dir = data_dir / "invalid_data"
         invalid_data_dir.mkdir(exist_ok=True)
@@ -110,6 +118,7 @@ class ProcessDogImages:
                 print(f"Checking {subdir}")
                 image_count = sum(1 for file in subdir.iterdir() if file.suffix.lower() in ['.jpg', '.jpeg'])            
 
+                # if fewer than image_count_minimum images, it is invalid
                 if image_count < self.image_count_minimum:
                     invalid_subdir = invalid_data_dir / subdir.name
                     invalid_subdir.mkdir(parents=True, exist_ok=True)
@@ -119,8 +128,17 @@ class ProcessDogImages:
                         shutil.move(file, destination_path)
                         print(f"{file} moved to {destination_path}")
 
+
     @staticmethod
     def rename_folders_by_count(data_directory):
+        """traverses a directory containing subdirectories of individual dogs, 
+        and renames the folders dog001, dog002, etc.) and files within 
+        consecutively (dog001_1, dog001_2, etc.). Assumes data has been preprocessed,
+        so will also delete empty directories.
+
+        Args:
+            data_directory (string): directory containing subdirectories of dog images
+        """
         target_dir = Path(data_directory)
 
         for i, subdirectory in enumerate(target_dir.iterdir(), start=1):
@@ -143,4 +161,3 @@ class ProcessDogImages:
                         new_file_path = new_folder_path / new_file_name
                         file_path.rename(new_file_path)
                         print(f"Renamed file: {file_path} to {new_file_path}")
-
