@@ -1,3 +1,10 @@
 .DS_Store
 Images/
 Annotation/
+.venv/
+Stanford_Dogs/
+Stanford_Anno/
+Tsinghua_Dogs/
+Dogs/
+*tar.gz
+Dogs.zip
