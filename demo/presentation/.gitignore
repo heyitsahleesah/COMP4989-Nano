@@ -1,0 +1,6 @@
+__pycache__/
+tf_venv/
+*.index
+*.data-00000-of-00001
+*.hdf5
+*.pickle
